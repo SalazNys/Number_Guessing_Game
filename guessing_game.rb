@@ -1,46 +1,63 @@
-def random_number()
-  number = rand(1..100)
-end
-def emptynil(guess)
-  return true if guess.empty? || guess.nil?
-  return false
+
+def random_number
+  rand(1..100)
 end
 
+def empty_or_nil?(guess)
+  guess.empty? || guess.nil?
+end
+
+def same_number?(guess,previous_guesses)
+  previous_guesses.include?(guess.to_i)
+end
+
+puts "|-------------------------------------------------------------------------|"
+puts "|                     |  NUMBER GUESSING GAME:  |                         |"
+puts "|-------------------------------------------------------------------------|\n\n"
+
+puts "  HI MY NAME IS SALAZAR, WHAT IS YOUR NAME?"
+name = gets.chomp
+puts "WELCOME #{name.upcase} TO \"THE NUMBER GUESSING GAME\"\n\n"
+puts "I HAVE CHOSEN A SECRET NUMBER AND YOU HAVE UP TO 5 ATTEMPS TO GUESS THE RIGHT NUMBER,"
+puts "WHEN YOU GUESS WRONG I WILL GIVE YOU A HINT ALLOWING YOU TO TRY AGAIN, GOOD LUCK !!!"
+puts "PLEASE GUESS A NUMBER BETWEEN 1 AND 100"
 previous_guesses = []
-correct_number = random_number
-counter = 0
-puts"---------------------------------------------------------------|"
-puts "------------------NUMBER GUESSING GAME------------------------|"
-puts"---------------------------------------------------------------|"
+attempt = 1
+permitted_guesses = 5
+right_number = random_number
 
-puts "You have up to 5 chances to guess the right number!"
-puts "What is your guess?"
-
-loop do
+while(attempt <= 5)
+  permitted_guesses -= 1
   guess = gets.chomp
-  if emptynil(guess)
-    puts "Nothing has been entered as a number, please guess agin!"
-  next
-end
 
-  if previous_guesses.include?(guess.to_i)
-    puts "you just guessed the same number,Guess again!"
+  if (guess.empty?)
+    puts " NOTHING HAS BEEN GUESSED, YOU HAVE #{permitted_guesses} GUESS(ES) LEFT PLEASE ENTER A NUMBER !!!"
+    next
+  end
 
-  elsif guess.to_i > correct_number.to_i
-    puts "you guessed too high! Guess again!"
-    previous_guesses << guess.to_i
+  if(same_number?(guess.to_i, previous_guesses))
+    puts "BECAREFUL,YOU JUST GUESSED THE SAME NUMBER THAN THE PREVIOUS ONE"
+    puts "YOU HAVE #{permitted_guesses} GUESS(ES) LEFT"
+  end
 
-  elsif guess.to_i < correct_number.to_i
-    puts "you guessed too low! Guess again!"
-    previous_guesses << guess.to_i
+  previous_guesses.push(guess.to_i)
 
-  elsif correct_number.to_i == guess.to_i
-    puts "CONGRATULATION YOU WON!"
+  if guess.to_i == right_number
+    puts "CONGRATULATION FOR WINNING ON YOUR ATTEMPT NUMBER #{attempt}, AND MY SECRET NUMBER WAS #{right_number}"
+    break
+  elsif attempt == 5
+    puts "SORRY YOU LOST"
     break
   end
-     counter += 1
-  if counter == 5
-    puts "SORRY YOU LOST!"
-    break
+
+  if(guess.to_i < right_number )
+    puts " YOU GUESSED TOO LOW AND YOU HAVE #{permitted_guesses} GUESS(ES) LEFT!!!"
+    puts "PLEASE GUESS AGAIN"
+  elsif (guess.to_i > right_number)
+    puts " YOU GUESSED TOO HIGH AND YOU HAVE #{permitted_guesses} GUESS(ES) LEFT!!!"
+    puts "PLEASE GUESS AGAIN"
+
   end
+
+  attempt += 1
 end
